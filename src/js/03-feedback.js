@@ -11,28 +11,31 @@ const refs = {
 refs.form.addEventListener('submit', onFormSubmit);
 refs.form.addEventListener('input', throttle(onFormInput, 500));
 
+let formData = {};
 savedTextarea();
 
-const formData = {
-};
-
-function onFormSubmit(evt) {   
+function onFormSubmit(evt) {  
     evt.preventDefault();
+    console.log(formData);
     evt.currentTarget.reset();
     localStorage.removeItem(STORAGE_KEY);
-    console.log(formData);
+    
 };
 
 function onFormInput(evt) {
     formData[evt.target.name] = evt.target.value;    
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));    
 };
 
-function savedTextarea() {    
+function savedTextarea() {
     const savedData = localStorage.getItem(STORAGE_KEY);
     const parsedData = JSON.parse(savedData);
-    if (savedData) {
-        refs.input.value = parsedData.email
-        refs.textarea.value = parsedData.message
+    if (parsedData) {
+        refs.input.value = parsedData.email || '';
+        refs.textarea.value = parsedData.message || '';
+        formData.email = refs.input.value;
+        formData.message = refs.textarea.value;
     }           
 }
+
+
